@@ -3,7 +3,9 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-
+import axios from "axios";
+const cardDiv = document.querySelector('.cards')
+axios.get(`https://api.github.com/users/aamay022`)
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -11,7 +13,17 @@
 
     Skip to STEP 3 (line 34).
 */
-
+.then(res => {
+  console.log(res.data)
+  const newCard = createCard(res.data)
+  cardDiv.appendChild(newCard)
+})
+.catch(err => {
+  console.error(err)
+})
+.finally(()=>{
+  console.log('success')
+})
 /*
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
@@ -28,8 +40,23 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
 
+followersArray.forEach(name => {
+  axios.get(`https://api.github.com/users/${name}`)
+.then(res => {
+  console.log(res.data)
+  const newCard = createCard(res.data)
+  cardDiv.appendChild(newCard)
+})
+.catch(err => {
+  console.error(err)
+})
+.finally(()=>{
+  console.log('success')
+})
+  
+})
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:
@@ -49,7 +76,48 @@ const followersArray = [];
       </div>
     </div>
 */
+function createCard(obj){
+const card = document.createElement('div')
+const userImg = document.createElement('img')
+const cardInfo = document.createElement('div')
+const userName = document.createElement('h3')
+const usersUserName = document.createElement('p')
+const location = document.createElement('p')
+const profile = document.createElement('p')
+const address = document.createElement('a')
+const followers = document.createElement('p')
+const following = document.createElement('p')
+const bio = document.createElement('p')
 
+userImg.src = obj.avatar_url
+userName.textContent = obj.name;
+usersUserName.textContent = obj.login
+location.textContent = obj.location
+profile.textContent = 'Profile: '
+address.href = obj.html_url
+address.textContent = obj.html_url
+followers.textContent = `Followers: ${obj.followers}`
+following.textContent = `Following: ${obj.following}`
+bio.textContent = `Bio: ${obj.bio}`
+
+card.classList.add('card')
+cardInfo.classList.add('card-info')
+userName.classList.add('name')
+usersUserName.classList.add('username')
+
+card.appendChild(userImg)
+card.appendChild(cardInfo)
+cardInfo.appendChild(userName)
+cardInfo.appendChild(usersUserName)
+cardInfo.appendChild(location)
+cardInfo.appendChild(profile)
+cardInfo.appendChild(followers)
+cardInfo.appendChild(following)
+cardInfo.appendChild(bio)
+profile.appendChild(address)
+
+return card
+}
 /*
   List of LS Instructors Github username's:
     tetondan
